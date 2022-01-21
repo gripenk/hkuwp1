@@ -1,0 +1,10 @@
+{
+    "require": {
+        "psy/psysh": "*",
+        "markri/wp-sec": "*",
+        "cache/redis-adapter": "*",
+        "predis/predis": "*",
+        "doctrine/cache": "*"
+    }
+}
+

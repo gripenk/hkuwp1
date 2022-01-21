@@ -1,0 +1,109 @@
+{
+  "apiVersion": "build.openshift.io/v1",
+  "kind": "BuildConfig",
+  "metadata": {
+    "annotations": {
+      "description": "Defines how to build the application",
+      "template.alpha.openshift.io/wait-for-ready": "true"
+    },
+    "name": "wordpress.php"
+  },
+  "spec": {
+    "nodeSelector": null,
+    "output": {
+      "to": {
+        "kind": "DockerImage",
+        "name": "docker-registry.default.svc:5000/openshift/wordpress:5.8.3"
+      }
+    },
+    "postCommit": {},
+    "resources": {},
+    "runPolicy": "Serial",
+    "source": {
+      "git": {
+        "ref": "5.8.3",
+        "uri": "https://github.com/WordPress/WordPress.git"
+      },
+      "type": "Git"
+    },
+    "strategy": {
+      "sourceStrategy": {
+        "from": {
+          "kind": "ImageStreamTag",
+          "name": "php:7.4",
+          "namespace": "openshift"
+        }
+      },
+      "type": "Source"
+    },
+    "triggers": [
+      {
+        "imageChange": {},
+        "type": "ImageChange"
+      },
+      {
+        "type": "ConfigChange"
+      },
+      {
+        "github": {
+          "secret": "${GITHUB_WEBHOOK_SECRET}"
+        },
+        "type": "GitHub"
+      }
+    ]
+  }
+}
+{
+  "apiVersion": "build.openshift.io/v1",
+  "kind": "BuildConfig",
+  "metadata": {
+    "annotations": {
+      "description": "Defines how to build the application",
+      "template.alpha.openshift.io/wait-for-ready": "true"
+    },
+    "name": "wordpress.themed"
+  },
+  "spec": {
+    "failedBuildsHistoryLimit": 5,
+    "nodeSelector": null,
+    "output": {
+      "to": {
+        "kind": "DockerImage",
+        "name": "docker-registry.default.svc:5000/openshift/wordpress-themed:5.8.3"
+      }
+    },
+    "postCommit": {},
+    "resources": {},
+    "runPolicy": "Serial",
+    "source": {
+      "git": {
+        "ref": "main",
+        "uri": "https://github.com/gripenk/hkuwp1.git"
+      },
+      "sourceSecret": {
+      },
+      "type": "Git"
+    },
+    "strategy": {
+      "sourceStrategy": {
+        "from": {
+          "kind": "ImageStreamTag",
+          "name": "wordpress:5.8.3",
+          "namespace": "openshift"
+        }
+      },
+      "type": "Source"
+    },
+    "successfulBuildsHistoryLimit": 5,
+    "triggers": [
+      {
+        "imageChange": {},
+        "type": "ImageChange"
+      },
+      {
+        "type": "ConfigChange"
+      }
+    ]
+  }
+}
+
